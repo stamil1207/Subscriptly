@@ -1,0 +1,87 @@
+.app-layout {
+  @apply min-h-screen bg-slate-100;
+}
+
+.app-header {
+  @apply bg-indigo-600 text-white;
+}
+
+.app-header-inner {
+  @apply mx-auto grid max-w-6xl grid-cols-2 items-center gap-4 px-4 py-4 md:grid-cols-3 md:px-8;
+}
+
+.app-brand {
+  @apply text-sm uppercase tracking-[0.2em] text-indigo-200;
+}
+
+.app-header-nav {
+  @apply hidden items-center justify-center gap-2 md:flex;
+}
+
+.app-nav-link {
+  @apply px-3 py-2 text-sm transition;
+}
+
+.app-nav-link-active {
+  @apply border-b-2 border-white font-semibold text-white;
+}
+
+.app-nav-link-inactive {
+  @apply text-indigo-100 hover:text-white;
+}
+
+.app-header-actions {
+  @apply flex items-center gap-2 justify-self-end;
+}
+
+.app-notification-button {
+  @apply mr-1 flex items-center justify-center text-indigo-100 hover:text-white;
+}
+
+.app-notification-icon {
+  @apply h-5 w-5;
+}
+
+.app-membership-label {
+  @apply text-sm font-bold text-white;
+}
+
+.app-profile-menu {
+  @apply relative;
+}
+
+.app-profile-avatar {
+  @apply flex h-10 w-10 items-center justify-center rounded-full border border-indigo-300 bg-indigo-500 text-sm font-semibold text-white;
+}
+
+.app-profile-dropdown {
+  @apply invisible absolute right-0 top-12 z-10 min-w-40 rounded-lg bg-white p-1 text-slate-700 opacity-0 shadow-lg ring-1 ring-slate-200 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100;
+}
+
+.app-profile-link {
+  @apply block rounded-md px-3 py-2 text-sm hover:bg-slate-100;
+}
+
+.app-profile-button {
+  @apply block w-full rounded-md px-3 py-2 text-left text-sm hover:bg-slate-100;
+}
+
+.app-content {
+  @apply mx-auto max-w-6xl p-4 md:p-8;
+}
+
+.app-mobile-nav {
+  @apply mb-4 flex flex-wrap items-center gap-2 md:hidden;
+}
+
+.app-mobile-nav-link {
+  @apply rounded-md px-3 py-2 text-sm;
+}
+
+.app-mobile-nav-link-active {
+  @apply bg-indigo-600 text-white;
+}
+
+.app-mobile-nav-link-inactive {
+  @apply bg-white text-slate-700 ring-1 ring-slate-200;
+}
