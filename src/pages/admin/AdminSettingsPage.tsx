@@ -1,4 +1,4 @@
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '../../context/auth-context'
 
 export default function AdminSettingsPage() {
   const { user } = useAuth()

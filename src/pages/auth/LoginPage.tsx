@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '../../context/auth-context'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -29,7 +29,7 @@ export default function LoginPage() {
     <div className="grid min-h-screen bg-slate-100 md:grid-cols-2">
       <section className="flex items-center justify-center bg-indigo-600 p-10 text-white">
         <div className="max-w-md space-y-3">
-          <p className="text-sm uppercase tracking-[0.2em] text-indigo-200">Project SaaS</p>
+          <p className="text-sm uppercase tracking-[0.2em] text-indigo-200">Subscriptly</p>
           <h1 className="text-4xl font-semibold leading-tight">Welcome back</h1>
           <p className="text-indigo-100">Manage your projects, billing, and team access from one place.</p>
         </div>

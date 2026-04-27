@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '../../context/auth-context'
 import './layout.css'
 
 const nav = [
@@ -17,7 +17,7 @@ export default function AdminLayout() {
     <div className="app-layout">
       <header className="app-header">
         <div className="app-header-inner">
-          <p className="app-brand">Project SaaS</p>
+          <p className="app-brand">Subscriptly</p>
 
           <nav className="app-header-nav">
             {nav.map((item) => (
