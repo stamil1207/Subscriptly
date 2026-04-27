@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import { storage } from '../lib/storage'
+import { authApi } from '../api/services'
+import { storage } from '../lib/storage.ts'
 import { AuthContext } from './auth-context'
 import type { AuthContextValue, AuthUser, LoginPayload, RegisterPayload } from '../types/auth'
 
