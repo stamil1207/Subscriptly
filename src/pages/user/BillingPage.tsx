@@ -9,12 +9,47 @@ type Subscription = {
   validUntil: string | null
 }
 
+type PaymentStep = 'options' | 'payment'
+
 export default function BillingPage() {
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('monthly')
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
+  const [paymentOption, setPaymentOption] = useState<'card' | 'upi'>('card')
+  const [paymentStep, setPaymentStep] = useState<PaymentStep>('options')
+  const [cardNumber, setCardNumber] = useState('')
+  const [cardName, setCardName] = useState('')
+  const [cardExpiry, setCardExpiry] = useState('')
+  const [cardCvv, setCardCvv] = useState('')
+  const [upiId, setUpiId] = useState('')
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [error, setError] = useState('')
+  const [notice, setNotice] = useState('')
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const checkoutStatus = params.get('checkout')
+    const checkoutCycle = params.get('cycle') as BillingCycle | null
+
+    if (checkoutStatus === 'success') {
+      const cycle = checkoutCycle === 'yearly' ? 'yearly' : 'monthly'
+      setSubscription({
+        plan: 'pro',
+        status: 'active',
+        cycle,
+        validUntil: getValidityDate(cycle),
+      })
+      setBillingCycle(cycle)
+      setNotice('Payment successful. Pro plan activated.')
+      window.history.replaceState({}, '', '/app/billing')
+      return
+    }
+
+    if (checkoutStatus === 'cancel') {
+      setNotice('Payment was cancelled.')
+      window.history.replaceState({}, '', '/app/billing')
+    }
+
     setSubscription({
       plan: 'free',
       status: 'active',
@@ -35,12 +70,34 @@ export default function BillingPage() {
 
   const onUpgrade = () => {
     setError('')
+    setNotice('')
+    setPaymentOption('card')
+    setPaymentStep('options')
+    setIsPaymentModalOpen(true)
+  }
+
+  const activateProPlan = () => {
     setSubscription({
       plan: 'pro',
       status: 'active',
       cycle: billingCycle,
       validUntil: getValidityDate(billingCycle),
     })
+    setNotice('Payment successful. Pro plan activated.')
+    setIsPaymentModalOpen(false)
+  }
+
+  const onProceedToPayment = () => {
+    setError('')
+    setPaymentStep('payment')
+  }
+
+  const onMockPay = async () => {
+    setError('')
+    setIsProcessingPayment(true)
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    setIsProcessingPayment(false)
+    activateProPlan()
   }
 
   const onCancel = () => {
@@ -74,6 +131,7 @@ export default function BillingPage() {
         </div>
       </div>
 
+      {notice && <p className="mb-3 text-sm text-green-700">{notice}</p>}
       {error && <p className="mb-3 text-sm text-red-600">{error}</p>}
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -123,7 +181,11 @@ export default function BillingPage() {
             <li>Improved team and permission controls</li>
           </ul>
           {subscription?.plan !== 'pro' ? (
-            <button type="button" className="btn-primary w-full" onClick={onUpgrade}>
+            <button
+              type="button"
+              className="btn-primary w-full"
+              onClick={onUpgrade}
+            >
               Upgrade
             </button>
           ) : (
@@ -151,6 +213,129 @@ export default function BillingPage() {
         )}
 
       </div>
+
+      {isPaymentModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+            <h3 className="text-lg font-semibold">Complete your upgrade</h3>
+            <p className="mt-1 text-sm text-slate-600">
+              {paymentStep === 'options'
+                ? 'Select a payment option to continue.'
+                : paymentOption === 'upi'
+                  ? 'Enter your UPI ID.'
+                  : 'Enter your card details.'}
+            </p>
+
+            {paymentStep === 'options' ? (
+              <div className="mt-4 space-y-3">
+                <label className="flex cursor-pointer items-center justify-between rounded-lg border border-slate-200 p-3">
+                  <div>
+                    <p className="text-sm font-medium text-slate-900">Card payment</p>
+                    <p className="text-xs text-slate-500">Visa, Mastercard, Amex</p>
+                  </div>
+                  <input
+                    type="radio"
+                    name="payment-option"
+                    checked={paymentOption === 'card'}
+                    onChange={() => setPaymentOption('card')}
+                  />
+                </label>
+
+                <label className="flex cursor-pointer items-center justify-between rounded-lg border border-slate-200 p-3">
+                  <div>
+                    <p className="text-sm font-medium text-slate-900">UPI / Wallet</p>
+                    <p className="text-xs text-slate-500">Fast payment for India</p>
+                  </div>
+                  <input
+                    type="radio"
+                    name="payment-option"
+                    checked={paymentOption === 'upi'}
+                    onChange={() => setPaymentOption('upi')}
+                  />
+                </label>
+              </div>
+            ) : paymentOption === 'card' ? (
+              <div className="mt-4 space-y-3">
+                <input
+                  className="input"
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(e.target.value)}
+                  placeholder="4242 4242 4242 4242"
+                />
+                <input
+                  className="input"
+                  value={cardName}
+                  onChange={(e) => setCardName(e.target.value)}
+                  placeholder="Card holder name"
+                />
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    className="input"
+                    value={cardExpiry}
+                    onChange={(e) => setCardExpiry(e.target.value)}
+                    placeholder="MM/YY"
+                  />
+                  <input
+                    className="input"
+                    value={cardCvv}
+                    onChange={(e) => setCardCvv(e.target.value)}
+                    placeholder="CVV"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="mt-4 space-y-3">
+                <input
+                  className="input"
+                  value={upiId}
+                  onChange={(e) => setUpiId(e.target.value)}
+                  placeholder="UPI ID (example@upi)"
+                />
+              </div>
+            )}
+
+            <p className="mt-4 text-sm text-slate-600">
+              Plan: <strong>{billingCycle === 'monthly' ? 'Pro Monthly' : 'Pro Yearly'}</strong>
+            </p>
+            <p className="text-sm text-slate-600">
+              Amount: <strong>{billingCycle === 'monthly' ? '₹999/month' : '₹9999/year'}</strong>
+            </p>
+
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => setIsPaymentModalOpen(false)}
+                disabled={isProcessingPayment}
+              >
+                Cancel
+              </button>
+              {paymentStep === 'payment' && (
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={() => setPaymentStep('options')}
+                  disabled={isProcessingPayment}
+                >
+                  Back
+                </button>
+              )}
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={paymentStep === 'options' ? onProceedToPayment : onMockPay}
+                disabled={isProcessingPayment}
+              >
+                {isProcessingPayment
+                  ? 'Processing...'
+                  : paymentStep === 'options'
+                    ? 'Continue'
+                    : `Pay ${billingCycle === 'monthly' ? '₹999' : '₹9999'}`}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
