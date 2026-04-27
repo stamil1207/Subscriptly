@@ -15,6 +15,10 @@ export default function SubscriptionsPage() {
     setSubscriptions([
       { id: 1, user: 'admin@example.com', plan: 'pro', status: 'active', expiry: '31 Dec 2026' },
       { id: 2, user: 'user@example.com', plan: 'free', status: 'inactive', expiry: 'No expiry' },
+      { id: 3, user: 'priya@subscriptly.com', plan: 'pro', status: 'active', expiry: '15 Jan 2027' },
+      { id: 4, user: 'arun@subscriptly.com', plan: 'pro', status: 'cancelled', expiry: '02 Oct 2026' },
+      { id: 5, user: 'nisha@subscriptly.com', plan: 'free', status: 'inactive', expiry: 'No expiry' },
+      { id: 6, user: 'rahul@subscriptly.com', plan: 'pro', status: 'active', expiry: '28 Feb 2027' },
     ])
   }, [])
 

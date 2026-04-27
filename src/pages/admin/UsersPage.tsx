@@ -19,6 +19,10 @@ export default function UsersPage() {
     setUsers([
       { id: 1, name: 'Admin User', email: 'admin@example.com', role: 'admin', status: 'active' },
       { id: 2, name: 'Normal User', email: 'user@example.com', role: 'user', status: 'inactive' },
+      { id: 3, name: 'Priya Raman', email: 'priya@subscriptly.com', role: 'user', status: 'active' },
+      { id: 4, name: 'Arun Kumar', email: 'arun@subscriptly.com', role: 'user', status: 'active' },
+      { id: 5, name: 'Nisha Menon', email: 'nisha@subscriptly.com', role: 'user', status: 'inactive' },
+      { id: 6, name: 'Rahul Dev', email: 'rahul@subscriptly.com', role: 'admin', status: 'active' },
     ])
   }, [])
 
