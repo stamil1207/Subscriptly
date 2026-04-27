@@ -1,32 +1,36 @@
-# Subscription Frontend (React + Vite)
+# Subscriptly Frontend
 
-Frontend implementation for a project management SaaS with separate User and Admin panels.
+Subscriptly is a frontend-only mock SaaS dashboard built with React and Vite.
+It includes separate User and Admin panels, mock authentication, projects management UI, and billing flow screens.
 
-## Stack
+## Tech Stack
 
 - React + Vite
+- TypeScript
 - React Router
-- Axios
 - Tailwind CSS
-- Stripe.js
 
-## Features
+## Current Mode
 
-- JWT-based auth flow (register, login, session restore)
-- Role-based route guards (`user` vs `admin`)
-- User panel routes under `/app/*`
-- Admin panel routes under `/admin/*`
-- Projects page with create/list/delete actions
-- Billing page with Stripe Checkout redirect and cancel action
-- Profile and admin monitoring pages
+This project is currently running in **frontend-only mock mode**.
 
-## Environment Variables
+- No backend integration is required to use the app UI.
+- Authentication and session behavior are mocked in frontend state/local storage.
+- Billing flow is UI-driven for demonstration.
 
-Copy `.env.example` to `.env` and fill values:
+## Available Screens
 
-- `VITE_API_BASE_URL`
-- `VITE_STRIPE_PUBLISHABLE_KEY`
-- `VITE_STRIPE_PRO_PRICE_ID`
+- Login / Register
+- User panel:
+  - Dashboard
+  - Projects
+  - Billing
+  - Profile
+- Admin panel:
+  - Overview
+  - Users
+  - Subscriptions
+  - Settings
 
 ## Run Locally
 
@@ -35,24 +39,23 @@ npm install
 npm run dev
 ```
 
-App runs by default at `http://localhost:5173`.
+Default dev URL:
 
-## API Contract Expectations
+`http://localhost:5173`
 
-The frontend expects these backend endpoints:
+## Test Login Credentials
 
-- `POST /auth/register`
-- `POST /auth/login` -> `{ access_token, user }`
-- `GET /auth/me`
-- `GET/POST/PUT/DELETE /projects`
-- `GET /billing/subscription`
-- `POST /billing/checkout-session` -> `{ session_id }`
-- `POST /billing/cancel`
-- `GET /admin/users`
-- `GET /admin/subscriptions`
+Use these credentials for demo testing:
 
-## Notes and Tradeoffs
+- Admin: `admin@test.com` / `Test@123`
+- User: `user@test.com` / `Test@123`
 
-- Project-limit enforcement (free max 3) is expected from backend and surfaced as API errors in UI.
-- Frontend keeps auth token/user in local storage for fast session restore.
-- UI is intentionally simple to prioritize architecture and correctness over styling complexity.
+Role logic in mock mode:
+
+- If email contains `admin` -> Admin panel
+- Otherwise -> User panel
+
+## Notes
+
+- Session is stored in browser local storage.
+- UI and flows are intentionally simple for demo and learning purposes.
